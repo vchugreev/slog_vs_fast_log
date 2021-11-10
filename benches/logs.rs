@@ -18,7 +18,7 @@ use slog_term;
 
 const SAMPLE_SIZE: usize = 500;
 const MEASUREMENT_TIME: time::Duration = time::Duration::from_secs(30);
-const CHANNEL_CAPACITY: usize = 10000;
+const CHANNEL_CAPACITY: usize = 1000;
 
 const SLOG_FILE: &str = "slog_bench.log";
 const FAST_LOG_FILE: &str = "fast_log_bench.log";
