@@ -17,7 +17,7 @@ use slog_async::{self, OverflowStrategy};
 use slog_term;
 
 const SAMPLE_SIZE: usize = 500;
-const MEASUREMENT_TIME: time::Duration = time::Duration::from_secs(10);
+const MEASUREMENT_TIME: time::Duration = time::Duration::from_secs(20);
 const CHANNEL_CAPACITY: usize = 10000;
 
 const SLOG_FILE: &str = "slog_bench.log";
