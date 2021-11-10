@@ -17,7 +17,7 @@ use slog_async::{self, OverflowStrategy};
 use slog_term;
 
 const SAMPLE_SIZE: usize = 500;
-const MEASUREMENT_TIME: time::Duration = time::Duration::from_secs(20);
+const MEASUREMENT_TIME: time::Duration = time::Duration::from_secs(30);
 const CHANNEL_CAPACITY: usize = 10000;
 
 const SLOG_FILE: &str = "slog_bench.log";
@@ -53,7 +53,7 @@ fn bench_logs(c: &mut Criterion) {
     let _ = fs::remove_file(FAST_LOG_FILE);
 
     let mut group = c.benchmark_group("fast log benchmark");
-    group.sampling_mode(SamplingMode::Linear);
+    group.sampling_mode(SamplingMode::Auto);
     group
         .sample_size(SAMPLE_SIZE)
         .measurement_time(MEASUREMENT_TIME);
