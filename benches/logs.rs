@@ -16,12 +16,14 @@ use slog::{o, slog_info, Drain, Logger};
 use slog_async::{self, OverflowStrategy};
 use slog_term;
 
-const SAMPLE_SIZE: usize = 500;
-const MEASUREMENT_TIME: time::Duration = time::Duration::from_secs(30);
+const SAMPLE_SIZE: usize = 100;
+const MEASUREMENT_TIME: time::Duration = time::Duration::from_secs(10);
 const CHANNEL_CAPACITY: usize = 1000;
 
 const SLOG_FILE: &str = "slog_bench.log";
 const FAST_LOG_FILE: &str = "fast_log_bench.log";
+
+const RECORDS_NUMBER: usize = 100;
 
 // Код на основе примера: https://github.com/slog-rs/misc/blob/master/examples/global_file_logger.rs
 // + доп. настройки для асинхронного логирования и некоторые параметры типа емкости канала и стратегии переполнения
@@ -72,8 +74,23 @@ fn bench_logs(c: &mut Criterion) {
     // типа slog_info
     let logger = create_slog();
 
-    group.bench_function("fast_log", |b| b.iter(|| info!("===")));
-    group.bench_function("slog", |b| b.iter(|| slog_info!(logger, "===")));
+    group.bench_function("fast_log", |b| {
+        b.iter(|| {
+            // Тестируем не одну запись в лог, а несколько. Это сделано для того, чтобы более явно проявить разницу
+            // в производительности логеров. Одна итерация дает небольшую разницу, которая может быть вообще не заметна
+            // на хорошем железе.
+            for _ in 1..RECORDS_NUMBER {
+                info!("===");
+            }
+        })
+    });
+    group.bench_function("slog", |b| {
+        b.iter(|| {
+            for _ in 1..RECORDS_NUMBER {
+                slog_info!(logger, "===");
+            }
+        })
+    });
 
     group.finish();
 }
